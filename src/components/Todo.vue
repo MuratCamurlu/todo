@@ -9,14 +9,15 @@
         v-model="model"
         placeholder="Enter a new Todo"
       />
-      <button class="addTodoBtn">Add Todo</button>
+      <button @click="addTodo" class="addTodoBtn">Add Todo</button>
     </div>
+    d
     <ul class="ul">
       <li v-for="(item, index) in data" :key="index">
-        <span>{{ item }}</span>
+        <span :class="{ strike: item.complate }">{{ item.text }}</span>
         <div class="btnGroup">
-          <button class="doneBtn">Done</button>
-          <button class="deleteBtn">Delete</button>
+          <button @click="doneTodo(item)" class="doneBtn">Done</button>
+          <button @click="deleteTodo(index)" class="deleteBtn">Delete</button>
         </div>
       </li>
     </ul>
@@ -31,9 +32,33 @@ export default {
       data: [],
     };
   },
+  methods: {
+    addTodo() {
+      if (this.model !== "") {
+        this.data.push({
+          id: Date.now(),
+          text: this.model,
+          complate: false,
+        });
+        this.model = "";
+        this.$refs.myInput.focus();
+      }
+    },
+    deleteTodo(index) {
+      this.data.splice(index, 1);
+    },
+    doneTodo(item) {
+      const idx = this.data.findIndex((x) => x.id === item.id);
+      this.data[idx].complate = !item.complate;
+    },
+  },
 };
 </script>
 <style scoped>
+.strike {
+  text-decoration: line-through;
+  color: green;
+}
 .wrapper {
   width: 100%;
   display: flex;
@@ -87,7 +112,7 @@ export default {
 .btnGroup {
   display: flex;
   justify-content: center;
-  gap: 2px;
+  gap: 5px;
 }
 .deleteBtn {
   background-color: white;
