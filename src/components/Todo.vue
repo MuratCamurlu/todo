@@ -1,6 +1,11 @@
 <template>
   <div class="wrapper">
     <h1 class="header">Todo List</h1>
+    <div ref="complatedRef" class="complatedDiv">
+      <p style="color: white">
+        Total Task-{{ data.length }} // Complated Task-{{ getComplated }}
+      </p>
+    </div>
     <div class="inputDiv">
       <input
         ref="myInput"
@@ -31,6 +36,20 @@ export default {
       model: "",
       data: [],
     };
+  },
+  watch: {
+    getComplated(newVal) {
+      if (newVal / this.data.length >= 0.5) {
+        this.$refs.complatedRef.style.background = "green";
+      } else {
+        this.$refs.complatedRef.style.background = "red";
+      }
+    },
+  },
+  computed: {
+    getComplated() {
+      return this.data.filter((item) => item.complate).length;
+    },
   },
   methods: {
     addTodo() {
@@ -135,5 +154,10 @@ export default {
 .doneBtn:hover {
   background-color: green;
   color: white;
+}
+.complatedDiv {
+  padding: 1rem;
+  margin-bottom: 2rem;
+  border-radius: 10px;
 }
 </style>
